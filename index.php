@@ -1,7 +1,19 @@
 <?php
+    require('UserValidator.php');
+
     if(isset($_POST['submit'])){
-        echo 'form submitted';
+
+        $validation = new UserValidator($_POST);
+        $errors = $validation->validateForm();
+
+        // Save data to database
+
+
     }
+
+
+
+
 
 ?>
 <!doctype html>
@@ -19,9 +31,15 @@
         <h2>Create new user</h2>
         <form action="<?= $_SERVER['PHP_SELF'] ?>" method="post">
             <label for="username">Name</label>
-            <input type="text" name="username">
+            <input type="text" name="username" value="<?= htmlspecialchars($_POST['username'] ?? '')?>">
+            <div class="error">
+                <?= $errors['username'] ?? '' ?>
+            </div>
             <label for="email">E-mail</label>
-            <input type="email" name="email">
+            <input type="email" name="email" value="<?= htmlspecialchars($_POST['email'] ?? '')?>">
+            <div class="error">
+                <?= $errors['email'] ?? '' ?>
+            </div>
             <input type="submit" value="submit" name="submit">
         </form>
     </div>
