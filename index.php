@@ -24,23 +24,26 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Validation Class - OOP</title>
-    <link rel="stylesheet" type="text/css" href="styles.css">
+    <link rel="stylesheet" type="text/css" href="css/styles.css">
 </head>
 <body>
    <main>
-       <form action="includes/formhandler.php">
+       <form action="includes/formhandler.php" method="post">
            <label for="firstname">Firstname?</label>
            <input type="text" id="firstname" name="firstname" placeholder="Firstname ...">
 
-           <label for="lastname">Lastname></label>
+           <label for="lastname">Lastname?</label>
            <input type="text" id="lastname" name="lastname" placeholder="Lastname ...">
 
-           <label for="favouritepet"></label>
+           <label for="favouritepet">Favourite Pet?</label>
            <select name="favouritepet" id="favouritepet">
                <option value="none">None</option>
                <option value="dog">Dog</option>
                <option value="cat">Cat</option>
+               <option value="bird">Bird</option>
            </select>
+
+           <button type="submit">Submit</button>
        </form>
    </main>
 </body>

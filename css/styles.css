@@ -3,7 +3,7 @@ body {
     font-family: Verdana;
 }
 
-.new-user {
+form {
     background: #fff;
     padding: 20px 40px;
     max-width: 300px;
@@ -14,7 +14,7 @@ h2 {
     color: #555;
 }
 
-label, input {
+label, input, select {
     display: block;
     margin: 18px 0;
 }
@@ -23,15 +23,15 @@ label {
     color: #777;
 }
 
-input[type='text'],
-input[type='email'] {
+input, select {
     border: 1px solid #ddd;
     padding: 10px;
     border-radius: 10px;
     width: 100%;
+    box-sizing:border-box;
 }
 
-input[type='submit'] {
+button {
     margin: 24px auto;
     font-size: 18px;
     background: coral;
