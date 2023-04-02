@@ -1,12 +1,24 @@
 <?php
-    require('UserValidator.php');
 
-    if(isset($_POST['submit'])){
+require 'Validator.php';
 
-        $validation = new UserValidator($_POST);
-        $errors = $validation->validateForm();
+    if($_SERVER['REQUEST_METHOD'] == 'POST'){
 
-        // Save data to database
+        $errors = [];
+
+        if (! Validator::string($_POST['firstname'], 1, 255)){
+            $errors['firstname'] = "Firstname not more th 255 characters is required";
+        }
+
+
+        if (! Validator::email($_POST['email']) ){
+            $errors['email'] = "Valid email is required";
+        }
+
+        if(empty($errors)){
+            echo "Data have been submitted";
+        }
+
 
 
     }
@@ -28,19 +40,20 @@
 </head>
 <body>
    <main>
-       <form action="includes/formhandler.php">
+       <form action="<?= $_SERVER['PHP_SELF'] ?>" method="post">
            <label for="firstname">Firstname?</label>
-           <input type="text" id="firstname" name="firstname" placeholder="Firstname ...">
+           <input type="text" id="firstname" name="firstname" placeholder="Firstname ..." value="<?= $_POST['firstname'] ?? ''?>">
+           <?php if (isset($errors['firstname'])) : ?>
+                <p><?= $errors['firstname']?></p>
+           <?php endif;?>
 
-           <label for="lastname">Lastname></label>
-           <input type="text" id="lastname" name="lastname" placeholder="Lastname ...">
+           <label for="email">Lastname</label>
+           <input type="text" id="email" name="email" placeholder="Email ..." value="<?= $_POST['email'] ?? ''?>">
+           <?php if (isset($errors['email'])) : ?>
+               <p><?= $errors['email']?></p>
+           <?php endif;?>
 
-           <label for="favouritepet"></label>
-           <select name="favouritepet" id="favouritepet">
-               <option value="none">None</option>
-               <option value="dog">Dog</option>
-               <option value="cat">Cat</option>
-           </select>
+           <button type="submit">Submit</button>
        </form>
    </main>
 </body>
