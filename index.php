@@ -1,3 +1,9 @@
+<?php
+    if(isset($_POST['submit'])){
+        echo 'form submitted';
+    }
+
+?>
 <!doctype html>
 <html lang="en">
 <head>
@@ -11,7 +17,7 @@
 <body>
     <div class="new-user">
         <h2>Create new user</h2>
-        <form action="" method="post">
+        <form action="<?= $_SERVER['PHP_SELF'] ?>" method="post">
             <label for="username">Name</label>
             <input type="text" name="username">
             <label for="email">E-mail</label>
