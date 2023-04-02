@@ -27,21 +27,21 @@
     <link rel="stylesheet" type="text/css" href="styles.css">
 </head>
 <body>
-    <div class="new-user">
-        <h2>Create new user</h2>
-        <form action="<?= $_SERVER['PHP_SELF'] ?>" method="post">
-            <label for="username">Name</label>
-            <input type="text" name="username" value="<?= htmlspecialchars($_POST['username'] ?? '')?>">
-            <div class="error">
-                <?= $errors['username'] ?? '' ?>
-            </div>
-            <label for="email">E-mail</label>
-            <input type="email" name="email" value="<?= htmlspecialchars($_POST['email'] ?? '')?>">
-            <div class="error">
-                <?= $errors['email'] ?? '' ?>
-            </div>
-            <input type="submit" value="submit" name="submit">
-        </form>
-    </div>
+   <main>
+       <form action="includes/formhandler.php">
+           <label for="firstname">Firstname?</label>
+           <input type="text" id="firstname" name="firstname" placeholder="Firstname ...">
+
+           <label for="lastname">Lastname></label>
+           <input type="text" id="lastname" name="lastname" placeholder="Lastname ...">
+
+           <label for="favouritepet"></label>
+           <select name="favouritepet" id="favouritepet">
+               <option value="none">None</option>
+               <option value="dog">Dog</option>
+               <option value="cat">Cat</option>
+           </select>
+       </form>
+   </main>
 </body>
 </html>
