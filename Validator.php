@@ -2,6 +2,8 @@
 
 class Validator
 {
+    /*Validator*/
+
     public mixed $data;
     public mixed $rules;
     public array $errors = array();
