@@ -10,12 +10,16 @@ require 'Validator.php';
         ];
 
         $rules = [
-            'firstname' => ['required', 'min:3', 'max:255'],
-            'email' => ['required', 'email']
+            'firstname' => ['required', 'min:3'],
+            'email' => ['required']
         ];
 
         $validator = new Validator($data, $rules);
         $errors = $validator->validate();
+
+        if(empty($errors)){
+            echo "Data have been submitted";
+        }
     }
 ?>
 <!doctype html>
