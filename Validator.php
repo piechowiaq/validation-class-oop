@@ -2,18 +2,20 @@
 
 class Validator
 {
-    public static function string($value, $min = 1, $max = INF): bool
-    {
-        $value = htmlspecialchars(stripcslashes(trim($value)));
+    public mixed $data;
+    public mixed $rules;
+    public array $errors = array();
 
-        return strlen($value) >= $min && strlen($value) <= $max;
+    public function __construct($data, $rules)
+    {
+        $this->data = $data;
+        $this->rules = $rules;
     }
 
-    public static function email($value)
+    public function validate()
     {
-        $value = htmlspecialchars(stripcslashes(trim($value)));
 
-        return filter_var($value, FILTER_VALIDATE_EMAIL);
     }
+
 
 }

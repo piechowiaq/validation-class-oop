@@ -4,28 +4,18 @@ require 'Validator.php';
 
     if($_SERVER['REQUEST_METHOD'] == 'POST'){
 
-        $errors = [];
+        $data = [
+          'firstname' => $_POST['firstname'],
+          'email' => $_POST['email']
+        ];
 
-        $name = $_POST['firstname'];
+        $rules = [
+            'firstname' => ['required', 'min:3', 'max:255'],
+            'email' => ['required', 'email']
+        ];
 
-        echo "<pre>";
-        var_dump(!$name, strlen($name), empty($name));
-        echo "</pre>";
-        exit;
-
-
-        if (! Validator::string($_POST['firstname'], 1, 255)){
-            $errors['firstname'] = "Firstname not more th 255 characters is required";
-
-        }
-
-        if (! Validator::email($_POST['email'])){
-            $errors['email'] = "Valid email is required";
-        }
-
-        if(empty($errors)){
-            echo "Data have been submitted";
-        }
+        $validator = new Validator($data, $rules);
+        $errors = $validator->validate();
     }
 ?>
 <!doctype html>
