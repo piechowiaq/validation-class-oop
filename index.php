@@ -11,7 +11,7 @@ require 'Validator.php';
 
         $rules = [
             'firstname' => ['required', 'min:3'],
-            'email' => ['required']
+            'email' => ['required', 'mail']
         ];
 
         $validator = new Validator($data, $rules);

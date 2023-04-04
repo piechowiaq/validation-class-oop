@@ -58,12 +58,33 @@ class Validator
         }
         else {
             if ($this->data[$name] < $value){
-                $this->errors[$name] =  "$name can't have more then $value characters";
+                $this->errors[$name] =  "$name must be higher then $value";
                 return false;
             }
         }
 
         return true;
+    }
+
+    public function int($name, $value)
+    {
+        if (!is_int($this->data[$name])){
+            $this->errors[$name] = "$name must be int type";
+            return false;
+        }
+
+        return true;
+
+    }
+
+    public function mail($name, $value)
+    {
+        if(!filter_var($this->data[$name], FILTER_VALIDATE_EMAIL)){
+            $this->errors[$name] = "$name must be a valid email";
+            return false;
+        }
+        return true;
+
     }
 
 
