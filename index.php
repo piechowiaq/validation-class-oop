@@ -9,6 +9,18 @@ require 'Validator.php';
           'email' => $_POST['email']
         ];
 
+        foreach ($data as $key => $value){
+            if(property_exists($this, $key)){
+
+                echo "<pre>";
+                var_dump($this);
+                echo "</pre>";
+                exit;
+                $this->{$key} = $value;
+            }
+
+        }
+
         $rules = [
             'firstname' => ['required', 'min:3'],
             'email' => ['required', 'mail']
