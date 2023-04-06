@@ -19,14 +19,17 @@ abstract class Model
             foreach ($rules as $rule){
 
                 if(!is_string($rule)){
+                    $rule = $rule[0];
+                }
+                if($rule[0] === self::RULE_REQUIRED && !$value) {
+                    $this->addError($attribute, self::RULE_REQUIRED);
 
-
-                    if($rule[0] === self::RULE_REQUIRED && !$value){
-                        $this->addError($attribute, self::RULE_REQUIRED);
                     }
                 }
             }
         }
+
+        return empty($this->errors);
    }
 
    public function addError(string $attribute, string $rule)
