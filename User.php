@@ -1,5 +1,7 @@
 <?php
 
+require 'Model.php';
+
 class User extends Model
 {
     public string $firstname;
@@ -9,7 +11,7 @@ class User extends Model
     function rules()
     {
         return [
-            'firstname' => [self::RULE_REQUIRED],
+            'firstname' => [self::RULE_REQUIRED, [self::RULE_MIN, 'min' => 8]],
             'email' => [self::RULE_REQUIRED, self::RULE_EMAIL]
         ];
     }

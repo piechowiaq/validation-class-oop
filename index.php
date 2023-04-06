@@ -1,33 +1,19 @@
 <?php
 
 require 'Validator.php';
+require 'User.php';
+
 
     if($_SERVER['REQUEST_METHOD'] == 'POST'){
 
-        $data = [
-          'firstname' => $_POST['firstname'],
-          'email' => $_POST['email']
-        ];
 
-        foreach ($data as $key => $value){
-            if(property_exists($this, $key)){
 
-                echo "<pre>";
-                var_dump($this);
-                echo "</pre>";
-                exit;
-                $this->{$key} = $value;
-            }
+        $user = new User();
+        $user->firstname = $_POST['firstname'];
+        $user->email = $_POST['email'];
+        $user->validate();
 
-        }
 
-        $rules = [
-            'firstname' => ['required', 'min:3'],
-            'email' => ['required', 'mail']
-        ];
-
-        $validator = new Validator($data, $rules);
-        $errors = $validator->validate();
 
         if(empty($errors)){
             echo "Data have been submitted";
