@@ -12,7 +12,8 @@ class User extends Model
     {
         return [
             'firstname' => [self::RULE_REQUIRED, [self::RULE_MIN, 'min' => 8]],
-            'email' => [self::RULE_REQUIRED, self::RULE_EMAIL]
+            'email' => [self::RULE_REQUIRED, self::RULE_EMAIL],
+            'password' => [self::RULE_REQUIRED]
         ];
     }
 }
