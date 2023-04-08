@@ -1,91 +1,72 @@
 <?php
 
-class Validator
-{
-    /*Validator*/
+class Validator {
+    protected $data;
+    protected $errors = [];
 
-    public mixed $data;
-    public mixed $rules;
-    public array $errors = array();
-
-    public function __construct($data, $rules)
-    {
+    public function __construct($data) {
         $this->data = $data;
-        $this->rules = $rules;
     }
 
-    public function validate(): array
-    {
-        /*foreach array with rules as name firstname, email, password => rules required, min:3*/
-        foreach($this->rules as $name => $rules){
-
-
-            /*foreach array with rules required, min:3*/
-            foreach ($rules as $rule){
-                /*if : found explode for min & 3*/
-                $rule_value = explode(':', $rule);
-                /*rule_name = min as $rule_value[0] - first element of explode*/
-                $rule_name =  $rule_value[0];
-                /*if key 1 exist in array value = key[1] which is 3*/
-                $value = (array_key_exists(1, $rule_value)) ? $rule_value[1] : null;
-
-                /*name => first name , $value is null if required if min it is 3*/
-                /*$rule_name is $this->required || $this->>min*/
-
-                if (!$this->$rule_name($name, $value)) break 2;
+    public function validate($rules) {
+        foreach ($rules as $field => $rule) {
+            $rules = explode('|', $rule);
+            foreach ($rules as $r) {
+                $this->applyRule($field, $r);
             }
         }
         return $this->errors;
     }
 
-    public function required($name, $value): bool
-    {
-        if (trim($this->data[$name]) == '' || $this->data[$name] == null){
-            $this->errors[$name] =  "$name is required";
-            return false;
-        }
+    protected function applyRule($field, $rule) {
+        $params = explode(':', $rule);
 
-        return true;
-    }
+        $method = 'validate' . ucfirst($params[0]);
 
-    public function min($name, $value): bool
-    {
-        if (is_string($this->data[$name])){
-            if (strlen($this->data[$name]) < $value){
-                $this->errors[$name] =  "$name must have min $value characters";
-                return false;
+        if (method_exists($this, $method)) {
+//            echo "<pre>";
+//            var_dump($params);
+//            echo "</pre>";
+//            exit;
+//            array_shift($params);
+//            echo "<pre>";
+//            var_dump($params);
+//            echo "</pre>";
+//            exit;
+            array_unshift($params, $this->data[$field]);
+            echo "<pre>";
+            var_dump($params);
+            echo "</pre>";
+            exit;
+
+            $result = call_user_func_array([$this, $method], $params);
+            if (!$result) {
+                echo "<pre>";
+                var_dump($params);
+                echo "</pre>";
+                exit;
+                $this->addError($field, $params[0]);
             }
         }
-        else {
-            if ($this->data[$name] < $value){
-                $this->errors[$name] =  "$name must be higher then $value";
-                return false;
-            }
-        }
-
-        return true;
     }
 
-    public function int($name, $value)
-    {
-        if (!is_int($this->data[$name])){
-            $this->errors[$name] = "$name must be int type";
-            return false;
-        }
-
-        return true;
-
+    protected function addError($field, $rule) {
+        $this->errors[$field][] = $rule;
     }
 
-    public function mail($name, $value)
-    {
-        if(!filter_var($this->data[$name], FILTER_VALIDATE_EMAIL)){
-            $this->errors[$name] = "$name must be a valid email";
-            return false;
-        }
-        return true;
-
+    protected function validateRequired($value) {
+        return !empty($value);
     }
 
+    protected function validateEmail($value) {
+        return filter_var($value, FILTER_VALIDATE_EMAIL) !== false;
+    }
 
+    protected function validateMin($value, $min) {
+        return strlen($value) >= $min;
+    }
+
+    protected function validateMax($value, $max) {
+        return strlen($value) <= $max;
+    }
 }

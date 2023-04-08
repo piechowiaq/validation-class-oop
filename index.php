@@ -6,14 +6,23 @@ require 'User.php';
 
     if($_SERVER['REQUEST_METHOD'] == 'POST'){
 
+        $data = [
+          'firstname' => $_POST['firstname'],
+          'email' => $_POST['email'],
+        ];
 
+        $rules = [
+          'firstname' => 'max:4|required|min:3' ,
+          'email' => 'required|email'
+        ];
 
-        $user = new User();
-        $user->firstname = $_POST['firstname'];
-        $user->email = $_POST['email'];
-        $user->validate();
+       $validate = new Validator($data);
+       $errors = $validate->validate($rules);
 
-
+        echo "<pre>";
+        var_dump($errors);
+        echo "</pre>";
+        exit;
 
         if(empty($errors)){
             echo "Data have been submitted";
