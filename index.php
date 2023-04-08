@@ -4,6 +4,7 @@ require 'Validator.php';
 require 'User.php';
 
 
+
     if($_SERVER['REQUEST_METHOD'] == 'POST'){
 
         $data = [
@@ -12,17 +13,14 @@ require 'User.php';
         ];
 
         $rules = [
-          'firstname' => 'max:4|required|min:3' ,
+          'firstname' => 'min:3|required|max:8' ,
           'email' => 'required|email'
         ];
 
        $validate = new Validator($data);
        $errors = $validate->validate($rules);
 
-        echo "<pre>";
-        var_dump($errors);
-        echo "</pre>";
-        exit;
+
 
         if(empty($errors)){
             echo "Data have been submitted";

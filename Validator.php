@@ -24,37 +24,47 @@ class Validator {
         $method = 'validate' . ucfirst($params[0]);
 
         if (method_exists($this, $method)) {
-//            echo "<pre>";
-//            var_dump($params);
-//            echo "</pre>";
-//            exit;
-//            array_shift($params);
-//            echo "<pre>";
-//            var_dump($params);
-//            echo "</pre>";
-//            exit;
-            array_unshift($params, $this->data[$field]);
-            echo "<pre>";
-            var_dump($params);
-            echo "</pre>";
-            exit;
+            $value = $this->data[$field];
+
+            $rule = $params[0];
+
+            array_shift($params);
+            array_unshift($params, $value);
 
             $result = call_user_func_array([$this, $method], $params);
+
+
             if (!$result) {
-                echo "<pre>";
-                var_dump($params);
-                echo "</pre>";
-                exit;
-                $this->addError($field, $params[0]);
+
+                $this->addError($field,  $rule, $params[1] ?? "");
             }
         }
     }
 
-    protected function addError($field, $rule) {
-        $this->errors[$field][] = $rule;
+    protected function addError($field, $rule, $params)
+    {
+        $errorMessage = $this->errorMessage($field, $rule, $params);
+        return $this->errors[$field] = $errorMessage;
+    }
+
+    public function errorMessage($field, $rule, $params)
+    {
+        return $this->errorMessages($field, $params)[$rule];
+    }
+
+
+    protected function errorMessages($field, $params){
+        $field = ucfirst($field);
+        return [
+            'required' => "{$field} is required",
+            'min' => "{$field} has to be min {$params} characters.",
+            'max' => "{$field} has to be max {$params} characters.",
+            'email' => "{$field} has to be valid email address.",
+        ];
     }
 
     protected function validateRequired($value) {
+
         return !empty($value);
     }
 
@@ -63,6 +73,7 @@ class Validator {
     }
 
     protected function validateMin($value, $min) {
+
         return strlen($value) >= $min;
     }
 
