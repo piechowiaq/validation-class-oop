@@ -1,83 +1,71 @@
 <?php
 
-class Validator {
+class Validator
+{
     protected $data;
+    protected $rules;
     protected $errors = [];
 
-    public function __construct($data) {
+    public function __construct($data, $rules)
+    {
         $this->data = $data;
+        $this->rules = $rules;
     }
 
-    public function validate($rules) {
-        foreach ($rules as $field => $rule) {
-            $rules = explode('|', $rule);
-            foreach ($rules as $r) {
-                $this->applyRule($field, $r);
+    public function validate()
+    {
+        foreach ($this->rules as $field => $rules) {
+            $value = $this->data[$field];
+            foreach ($rules as $rule) {
+                $params = explode(':', $rule);
+                $method = 'validate' . ucfirst($params[0]);
+                if (method_exists($this, $method)) {
+                    if (!call_user_func_array([$this, $method], [$field, $value, $params])) {
+                        break;
+                    }
+                }
             }
         }
+        return empty($this->errors);
+    }
+
+    protected function addError($field, $message)
+    {
+        $this->errors[$field] = $message;
+    }
+
+    public function getErrors()
+    {
         return $this->errors;
     }
 
-    protected function applyRule($field, $rule) {
-        $params = explode(':', $rule);
-
-        $method = 'validate' . ucfirst($params[0]);
-
-        if (method_exists($this, $method)) {
-            $value = $this->data[$field];
-
-            $rule = $params[0];
-
-            array_shift($params);
-            array_unshift($params, $value);
-
-            $result = call_user_func_array([$this, $method], $params);
-
-
-            if (!$result) {
-
-                $this->addError($field,  $rule, $params[1] ?? "");
-            }
+    protected function validateRequired($field, $value, $params)
+    {
+        if (empty($value)) {
+            $this->addError($field, "The {$field} field is required.");
+            return false;
         }
+        return true;
     }
 
-    protected function addError($field, $rule, $params)
+    protected function validateMin($field, $value, $params)
     {
-        $errorMessage = $this->errorMessage($field, $rule, $params);
-        return $this->errors[$field] = $errorMessage;
+        $min = $params[1];
+        if (strlen($value) < $min) {
+            $this->addError($field, "The {$field} field must be at least {$min} characters.");
+            return false;
+        }
+        return true;
     }
 
-    public function errorMessage($field, $rule, $params)
+    protected function validateEmail($field, $value, $params)
     {
-        return $this->errorMessages($field, $params)[$rule];
-    }
-
-
-    protected function errorMessages($field, $params){
-        $field = ucfirst($field);
-        return [
-            'required' => "{$field} is required",
-            'min' => "{$field} has to be min {$params} characters.",
-            'max' => "{$field} has to be max {$params} characters.",
-            'email' => "{$field} has to be valid email address.",
-        ];
-    }
-
-    protected function validateRequired($value) {
-
-        return !empty($value);
-    }
-
-    protected function validateEmail($value) {
-        return filter_var($value, FILTER_VALIDATE_EMAIL) !== false;
-    }
-
-    protected function validateMin($value, $min) {
-
-        return strlen($value) >= $min;
-    }
-
-    protected function validateMax($value, $max) {
-        return strlen($value) <= $max;
+        if (!filter_var($value, FILTER_VALIDATE_EMAIL)) {
+            $this->addError($field, "The {$field} field must be a valid email address.");
+            return false;
+        }
+        return true;
     }
 }
+
+

@@ -13,12 +13,13 @@ require 'User.php';
         ];
 
         $rules = [
-          'firstname' => 'min:3|required|max:8' ,
-          'email' => 'required|email'
+          'firstname' => ['min:3','required','max:8'] ,
+          'email' => ['email','required']
         ];
 
-       $validate = new Validator($data);
-       $errors = $validate->validate($rules);
+       $validate = new Validator($data, $rules);
+       $validate->validate();
+       $errors = $validate->getErrors();
 
 
 
