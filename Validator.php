@@ -66,6 +66,16 @@ class Validator
         }
         return true;
     }
+
+    protected function validateMatch($field, $value, $params)
+    {
+        if($value !== $this->data[$params[1]]){
+            $this->addError($field, "The {$field} field must match field {$params[1]}.");
+            return false;
+        }
+        return true;
+
+    }
 }
 
 

@@ -10,11 +10,15 @@ require 'User.php';
         $data = [
           'firstname' => $_POST['firstname'],
           'email' => $_POST['email'],
+          'password' => $_POST['password'],
+          'password-repeat' => $_POST['password-repeat']
         ];
 
         $rules = [
           'firstname' => ['min:3','required','max:8'] ,
-          'email' => ['email','required']
+          'email' => ['email','required'],
+          'password' => ['required'],
+          'password-repeat' => ['required', 'match:password'],
         ];
 
        $validate = new Validator($data, $rules);
