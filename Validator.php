@@ -15,7 +15,7 @@ class Validator
     public function validate()
     {
         foreach ($this->rules as $field => $rules) {
-            $value = $this->data[$field];
+            $value = htmlspecialchars(stripcslashes(trim($this->data[$field])));
             foreach ($rules as $rule) {
                 $params = explode(':', $rule);
                 $method = 'validate' . ucfirst($params[0]);
